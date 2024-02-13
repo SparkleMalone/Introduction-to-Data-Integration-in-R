@@ -12,7 +12,8 @@ Data analysis often requires combining data from multiple sources, such as files
 #### Choose the right package
 R has many packages that can help you import, merge, and manipulate data from different sources. Some of the most popular and useful ones for tables include readr, dplyr, tidyr, and purrr. These packages are part of the tidyverse, a collection of packages that share a consistent and coherent syntax and philosophy for data analysis. For spatial data, the sf and terra packages are useful.
 
-| Type of Data| Library| 
+Type of Data| Library
+|------:|-----------|
 |Tabular| tidyverse|
 | Vector| sf|
 | Raster | terra|
