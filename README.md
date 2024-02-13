@@ -149,7 +149,9 @@ names(FLUXNET)
 
 Subset the FLUXNET dataset to include only the columns of interest and rename them:
 ```{r, include=T}
-FLUXNET.sub <- FLUXNET %>% select( "ID", "MOD13A3_061__1_km_monthly_EVI", "MOD13A3_061__1_km_monthly_NDVI", "MOD13A3_061__1_km_monthly_VI_Quality")%>% 
+FLUXNET.sub <- FLUXNET %>% select( "ID",
+"Date",
+"MOD13A3_061__1_km_monthly_EVI", "MOD13A3_061__1_km_monthly_NDVI", "MOD13A3_061__1_km_monthly_VI_Quality")%>% 
 rename( SITE_ID = ID,
 EVI = MOD13A3_061__1_km_monthly_EVI,
 NDVI = MOD13A3_061__1_km_monthly_NDVI, 
