@@ -27,6 +27,15 @@ Data integration can introduce errors or inconsistencies in your data, such as d
 
 In this workshop you will begin to extract information about the FLUXNET CH4 tower sites.
 
+# Load Libraries:
+```{r, include=T}
+library(sf)
+library(terra)
+library(tidyverse)
+library(ggplot2)
+library(AOI)
+```
+
 # Integrating information from simple features
 
 Import the file FluxNet_Sites_2024.csv and call it FluxNet
