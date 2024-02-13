@@ -173,6 +173,7 @@ Check to make sure the list of sites matches:
 length( unique(FLUXNET_CH4$SITE_ID))
 length(unique(FLUXNET_CH4_final$SITE_ID))
 ```
+You are now prepared to take data from different sources to build a file to explore patterns in methane infrastructure.
 
 
 
