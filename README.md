@@ -138,6 +138,41 @@ inner_join() includes all rows that appear in both the first data frame (x) and 
 left_join() returns all rows from x  based on matching rows on shared columns in y.
 right_join() is the companion to left_join(), but returns all rows included in y based on matching rows on shared columns in x.
 
-Merge the two sf and raster based datasets into a single tabular FLUXNETCH4.
+Import APPEEARS file where I requested MODIS NDVI and EVI data for all FLUXNET_sites:
+```{r, include=T}
+
+FLUXNET <- read.csv("Data/ENV720-MOD13A3-061-results.csv")
+names(FLUXNET)
+```
+
+Subset dataset to include only the columns of interest and rename them:
+```{r, include=T}
+FLUXNET.sub <- FLUXNET %>% select( "ID", "MOD13A3_061__1_km_monthly_EVI", "MOD13A3_061__1_km_monthly_NDVI", "MOD13A3_061__1_km_monthly_VI_Quality")%>% 
+rename( SITE_ID = ID,
+EVI = MOD13A3_061__1_km_monthly_EVI,
+NDVI = MOD13A3_061__1_km_monthly_NDVI, 
+QAQC = MOD13A3_061__1_km_monthly_VI_Quality ) %>% filter( QAQC > 0)
+
+names(FLUXNET.sub)
+```
+Make the FLUXNET CH4 vector a dataframe:
+```{r, include=T}
+FLUXNET_CH4 <- as.data.frame( FLUXNET.CH4.shp)
+```
+Identify the lie column that you should use to join the datasets:
+```{r, include=T}
+FLUXNET_CH4$SITE_ID
+FLUXNET.sub$SITE_ID
+```
+Use left_join because you want to keep all the data from FLUXNET_CH4 and only the sites in FLUXNET.sub that match the sites in FLUXNET_CH4:
+```{r, include=T}
+FLUXNET_CH4_final <- FLUXNET_CH4 %>% left_join( FLUXNET.sub, by= 'SITE_ID')
+```
+Check to make sure the list of sites matches:
+```{r, include=T}
+length( unique(FLUXNET_CH4$SITE_ID))
+length(unique(FLUXNET_CH4_final$SITE_ID))
+```
+
 
 
