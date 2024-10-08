@@ -8,7 +8,6 @@ Data analysis often requires combining data from multiple sources, such as files
 2. Combine information from tabular data sources.
 3. Combine tabular and vector data.
 4. Combine tabular and raster data. 
-4. Combine tabular data by an ID and time.
 
 #### Choose the right package
 R has many packages that can help you import, merge, and manipulate data from different sources. Some of the most popular and useful ones for tables include readr, dplyr, tidyr, and purrr. These packages are part of the tidyverse, a collection of packages that share a consistent and coherent syntax and philosophy for data analysis. For spatial data, the sf and terra packages are useful.
@@ -68,28 +67,21 @@ st_is_valid(FLUXNET.CH4.shp)
 Create a global sf and extract the country into the sf
 
 ```{r, include=T}
-
 global <- aoi_get(country= c("Europe","Asia" ,"North America", "South America", "Australia","Africa", "New Zealand"))
 
 st_is_valid(global)
-
 ```
 Make the CRS match:
 ```{r, include=T}
-
 FLUXNET.CH4.shp = st_transform(FLUXNET.CH4.shp, crs= '+init=epsg:4087')
-
 global = st_transform(global, crs= '+init=epsg:4087')
 
 ggplot() + geom_sf(data = global) + geom_sf(data = FLUXNET.CH4.shp) 
-
 ```
 
-Use the st_intersect to extract the country of each tower site:
+Use the st_intersect to extract the courntry of each tower site:
 ```{r, include=T}
 FLUXNET.CH4.shp$Country <- st_intersection( global, FLUXNET.CH4.shp)$name
-
-FLUXNET.CH4.shp$Country 
 ```
 
 # Integrating information from rasters
@@ -152,6 +144,7 @@ FLUXNET.CH4.shp$ELEVATION = terra::extract(elevation, FLUXNET.CH4.shp)$wc2.1_2.5
 # Joining tables
 We can combine columns from two (or more) tables together. This can be achieved using the join family of functions in dplyr. There are different types of joins that will result in different outcomes.
 
+
 inner_join() includes all rows that appear in both the first data frame (x) and the second data frame (y).
 
 left_join() returns all rows from x  based on matching rows on shared columns in y.
@@ -165,9 +158,7 @@ names(FLUXNET)
 
 Subset the FLUXNET dataset to include only the columns of interest and rename them:
 ```{r, include=T}
-FLUXNET.sub <- FLUXNET %>% select( "ID",
-"Date",
-"MOD13A3_061__1_km_monthly_EVI", "MOD13A3_061__1_km_monthly_NDVI", "MOD13A3_061__1_km_monthly_VI_Quality") %>% 
+FLUXNET.sub <- FLUXNET %>% select( "ID", "Date", "MOD13A3_061__1_km_monthly_EVI", "MOD13A3_061__1_km_monthly_NDVI", "MOD13A3_061__1_km_monthly_VI_Quality")%>% 
 rename( SITE_ID = ID,
 EVI = MOD13A3_061__1_km_monthly_EVI,
 NDVI = MOD13A3_061__1_km_monthly_NDVI, 
@@ -193,42 +184,7 @@ Check to make sure the list of sites matches:
 length( unique(FLUXNET_CH4$SITE_ID))
 length(unique(FLUXNET_CH4_final$SITE_ID))
 ```
-Import the monthly FLUX data:
-```{r, include=T}
-
-load( "Data/FLUXNET_FLUXES.RDATA")
-```
-Look at the flux file "FLUXNET.flux":
-```{r, include=T}
-summary( FLUXNET.flux)
-names(FLUXNET.flux)
-
-# This is a good column to join based on:
-FLUXNET.flux$YearMon
-
-```
-In your site file, convert the date to Year-Month and use this column to join it with the flux file "FLUXNET.flux":
-
-```{r, include=T}
-names(FLUXNET_CH4_final)
-summary( FLUXNET_CH4_final$Date)
-FLUXNET_CH4_final$Date
-
-# Format as a Date:
-FLUXNET_CH4_final$Date.f <-FLUXNET_CH4_final$Date %>% as.Date(format='%Y-%m-%d')
-
-# Format as a Yearmon:
-library(zoo)
-FLUXNET_CH4_final$YearMon <- FLUXNET_CH4_final$Date.f %>% zoo::as.yearmon( "%m-%Y")
-
-class(FLUXNET_CH4_final$YearMon)
-```
-Join the two files: 
-```{r, include=T}
-fluxes_month <- FLUXNET.flux %>% left_join(FLUXNET_CH4_final , by = 'YearMon')
-```
-Save your file:
-```{r, include=T}
-save(fluxes_month, "Monthly_Fluxes.RDATA" )
-```
 You are now prepared to take data from different sources to build a file to explore patterns in methane infrastructure.
+
+
+
