@@ -203,6 +203,9 @@ Look at the flux file "FLUXNET.flux":
 summary( FLUXNET.flux)
 names(FLUXNET.flux)
 
+# Make SITE ID:
+FLUXNET.flux$SITE_ID <- FLUXNET.flux$SITE
+
 # This is a good column to join based on:
 FLUXNET.flux$YearMon
 
@@ -225,10 +228,11 @@ class(FLUXNET_CH4_final$YearMon)
 ```
 Join the two files: 
 ```{r, include=T}
-fluxes_month <- FLUXNET.flux %>% left_join(FLUXNET_CH4_final , by = 'YearMon')
+fluxes_month <- FLUXNET.flux %>% left_join(FLUXNET_CH4_final , by = c ('YearMon', 'SITE_ID'))
+
 ```
 Save your file:
 ```{r, include=T}
-save(fluxes_month, "Monthly_Fluxes.RDATA" )
+save(fluxes_month, file="Monthly_Fluxes.RDATA" )
 ```
 You are now prepared to take data from different sources to build a file to explore patterns in methane infrastructure.
